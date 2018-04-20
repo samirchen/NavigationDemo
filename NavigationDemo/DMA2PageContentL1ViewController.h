@@ -1,5 +1,5 @@
 //
-//  DMA1PageContentViewController.h
+//  DMA2PageContentL1ViewController.h
 //  NavigationDemo
 //
 //  Created by qiufu on 20/04/2018.
@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DMA1PageContentViewController : UIViewController
+@interface DMA2PageContentL1ViewController : UIViewController
 
 @property (assign, nonatomic) NSUInteger contentIndex;
 
-- (instancetype)initWithContentString:(NSString *)content;
+- (instancetype)initWithContentArray:(NSArray *)contentArray;
 
 @end

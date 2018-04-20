@@ -19,6 +19,8 @@
 		8247C10A2089DD180055E407 /* DMA1PageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C1092089DD180055E407 /* DMA1PageContentViewController.m */; };
 		8247C1172089EB2B0055E407 /* DMB2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C1162089EB2B0055E407 /* DMB2ViewController.m */; };
 		8247C11A2089EC960055E407 /* DMA2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C1192089EC960055E407 /* DMA2ViewController.m */; };
+		8247C11D208A11360055E407 /* DMA2PageContentL1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C11C208A11360055E407 /* DMA2PageContentL1ViewController.m */; };
+		8247C120208A11460055E407 /* DMA2PageContentL2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C11F208A11460055E407 /* DMA2PageContentL2ViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,10 @@
 		8247C1162089EB2B0055E407 /* DMB2ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMB2ViewController.m; sourceTree = "<group>"; };
 		8247C1182089EC960055E407 /* DMA2ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMA2ViewController.h; sourceTree = "<group>"; };
 		8247C1192089EC960055E407 /* DMA2ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMA2ViewController.m; sourceTree = "<group>"; };
+		8247C11B208A11360055E407 /* DMA2PageContentL1ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMA2PageContentL1ViewController.h; sourceTree = "<group>"; };
+		8247C11C208A11360055E407 /* DMA2PageContentL1ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMA2PageContentL1ViewController.m; sourceTree = "<group>"; };
+		8247C11E208A11460055E407 /* DMA2PageContentL2ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMA2PageContentL2ViewController.h; sourceTree = "<group>"; };
+		8247C11F208A11460055E407 /* DMA2PageContentL2ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMA2PageContentL2ViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				8247C1132089EAD20055E407 /* NavigationTransition */,
-				8247C1142089EB0B0055E407 /* InteractivePushAndPop */,
+				8247C1142089EB0B0055E407 /* InteractiveTransition */,
 			);
 			name = Navigation;
 			sourceTree = "<group>";
@@ -123,6 +129,10 @@
 			children = (
 				8247C1182089EC960055E407 /* DMA2ViewController.h */,
 				8247C1192089EC960055E407 /* DMA2ViewController.m */,
+				8247C11B208A11360055E407 /* DMA2PageContentL1ViewController.h */,
+				8247C11C208A11360055E407 /* DMA2PageContentL1ViewController.m */,
+				8247C11E208A11460055E407 /* DMA2PageContentL2ViewController.h */,
+				8247C11F208A11460055E407 /* DMA2PageContentL2ViewController.m */,
 			);
 			name = TwoDimension;
 			sourceTree = "<group>";
@@ -140,13 +150,13 @@
 			name = NavigationTransition;
 			sourceTree = "<group>";
 		};
-		8247C1142089EB0B0055E407 /* InteractivePushAndPop */ = {
+		8247C1142089EB0B0055E407 /* InteractiveTransition */ = {
 			isa = PBXGroup;
 			children = (
 				8247C1152089EB2B0055E407 /* DMB2ViewController.h */,
 				8247C1162089EB2B0055E407 /* DMB2ViewController.m */,
 			);
-			name = InteractivePushAndPop;
+			name = InteractiveTransition;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -226,8 +236,10 @@
 				8247C11A2089EC960055E407 /* DMA2ViewController.m in Sources */,
 				8247C0F02089C5700055E407 /* main.m in Sources */,
 				8247C0FE2089C76E0055E407 /* DMB1AnimationController.m in Sources */,
+				8247C11D208A11360055E407 /* DMA2PageContentL1ViewController.m in Sources */,
 				8247C0F82089C5B90055E407 /* DMB1ViewController.m in Sources */,
 				8247C1072089DB060055E407 /* DMA1ViewController.m in Sources */,
+				8247C120208A11460055E407 /* DMA2PageContentL2ViewController.m in Sources */,
 				8247C0E22089C5700055E407 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

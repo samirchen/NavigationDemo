@@ -1,27 +1,26 @@
 //
-//  DMA1ViewController.m
+//  DMA2PageContentL1ViewController.m
 //  NavigationDemo
 //
 //  Created by qiufu on 20/04/2018.
 //  Copyright © 2018 CX. All rights reserved.
 //
 
-#import "DMA1ViewController.h"
-#import "DMA2ViewController.h"
-#import "DMA1PageContentViewController.h"
+#import "DMA2PageContentL1ViewController.h"
+#import "DMA2PageContentL2ViewController.h"
 
-@interface DMA1ViewController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
+@interface DMA2PageContentL1ViewController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
 @property (copy, nonatomic) NSArray *contentDataArray;
 @property (strong, nonatomic) UIPageViewController *pageViewController;
-@property (strong, nonatomic) UIButton *refreshButton;
+
 @end
 
-@implementation DMA1ViewController
+@implementation DMA2PageContentL1ViewController
 #pragma mark - Property
 - (UIPageViewController *)pageViewController {
     if (!_pageViewController) {
         NSDictionary *options = @{UIPageViewControllerOptionInterPageSpacingKey: @(0)};
-        _pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:options];
+        _pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:options];
         _pageViewController.delegate = self;
         _pageViewController.dataSource = self;
         
@@ -31,55 +30,32 @@
 }
 
 #pragma mark - Lifecycle
+- (instancetype)initWithContentArray:(NSArray *)contentArray {
+    self = [super init];
+    if (self) {
+        _contentDataArray = contentArray;
+    }
+    
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self loadData];
     [self setupUI];
     [self refreshContent];
 }
 
+
 #pragma mark - Setup
-- (void)loadData {
-    self.contentDataArray = @[@"上下[0]", @"上下[1]", @"上下[2]", @"上下[3]"];
-}
-
 - (void)setupUI {
-    self.view.backgroundColor = [UIColor blackColor];
-    
-    self.navigationItem.title = @"一维";
-    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:@"二维" style:UIBarButtonItemStylePlain target:self action:@selector(onNextBarButtonClicked:)];
-    self.navigationItem.rightBarButtonItems = @[nextBarButton];
-
+    self.view.backgroundColor = [UIColor whiteColor];
     
     // Page view controller UI.
     self.pageViewController.view.frame = self.view.bounds;
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
-    
-    // Refresh button.
-    self.refreshButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.refreshButton setTitle:@"Refresh" forState:UIControlStateNormal];
-    [self.refreshButton addTarget:self action:@selector(onRefreshButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.refreshButton];
-    self.refreshButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addConstraints:@[
-                                [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0],
-                                [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:-10],
-                                [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:60.0],
-                                [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0]
-                                ]];
 
-}
-
-#pragma mark - Action
-- (void)onNextBarButtonClicked:(UIBarButtonItem *)barButtonItem {
-    DMA2ViewController *vc = [[DMA2ViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)onRefreshButtonClicked:(UIButton *)button {
-    [self refreshContent];
 }
 
 #pragma mark - Utility
@@ -87,7 +63,7 @@
     UIViewController *initialViewController = [self viewControllerAtIndex:0];
     if (initialViewController) {
         NSArray *viewControllers = [NSArray arrayWithObject:initialViewController];
-        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionReverse animated:NO completion:nil];
+        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
     }
 }
 
@@ -97,11 +73,10 @@
     }
     
     NSString *content = [self.contentDataArray objectAtIndex:index];
-    DMA1PageContentViewController *vc = [[DMA1PageContentViewController alloc] initWithContentString:content];
+    DMA2PageContentL2ViewController *vc = [[DMA2PageContentL2ViewController alloc] initWithContentString:content];
     vc.contentIndex = index;
     return vc;
 }
-
 
 #pragma mark - UIPageViewControllerDelegate
 //- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers {
@@ -127,7 +102,7 @@
 #pragma mark - UIPageViewControllerDataSource
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
     
-    DMA1PageContentViewController *vc = (DMA1PageContentViewController *) viewController;
+    DMA2PageContentL2ViewController *vc = (DMA2PageContentL2ViewController *) viewController;
     NSInteger index = vc.contentIndex;
     index--;
     UIViewController *preVC = [self viewControllerAtIndex:index];
@@ -136,7 +111,7 @@
 }
 
 - (nullable UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    DMA1PageContentViewController *vc = (DMA1PageContentViewController *) viewController;
+    DMA2PageContentL2ViewController *vc = (DMA2PageContentL2ViewController *) viewController;
     NSInteger index = vc.contentIndex;
     index++;
     UIViewController *nextVC = [self viewControllerAtIndex:index];
@@ -151,7 +126,5 @@
 //- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
 //
 //}
-
-
 
 @end

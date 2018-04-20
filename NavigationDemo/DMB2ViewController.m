@@ -41,11 +41,9 @@
     
     self.navigationItem.title = @"交互式转场";
     UIBarButtonItem *closeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(onCloseBarButtonClicked:)];
-    self.navigationItem.leftBarButtonItems = @[closeBarButton];
-    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStylePlain target:self action:@selector(onNextBarButtonClicked:)];
-    self.navigationItem.rightBarButtonItems = @[nextBarButton];
+    self.navigationItem.rightBarButtonItems = @[closeBarButton];
     
-    // 全屏滑动返回手势。
+    // 如果当前压栈的有 VC 时，则增加全屏滑动返回手势。
     if (self.navigationController.viewControllers.count > 1) {
         // 获取系统自带滑动手势的 target 对象。
         id target = self.navigationController.interactivePopGestureRecognizer.delegate;
@@ -92,10 +90,6 @@
 #pragma mark - Action
 - (void)onCloseBarButtonClicked:(UIBarButtonItem *)barButtonItem {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)onNextBarButtonClicked:(UIBarButtonItem *)barButtonItem {
-    
 }
 
 - (void)onPushButtonClicked:(UIButton *)button {

@@ -45,7 +45,7 @@
     self.navigationItem.rightBarButtonItems = @[nextBarButton];
     
     // Content label.
-    self.contentLabel.text = [NSString stringWithFormat:@"自定义导航转场[%d]", (int32_t) self.navigationController.viewControllers.count - 1];
+    self.contentLabel.text = [NSString stringWithFormat:@"自定义转场[%d]", (int32_t) self.navigationController.viewControllers.count - 1];
     [self.view addSubview:self.contentLabel];
     self.contentLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:@[

@@ -1,19 +1,19 @@
 //
-//  DMA1PageContentViewController.m
+//  DMA2PageContentL2ViewController.m
 //  NavigationDemo
 //
 //  Created by qiufu on 20/04/2018.
 //  Copyright © 2018 CX. All rights reserved.
 //
 
-#import "DMA1PageContentViewController.h"
+#import "DMA2PageContentL2ViewController.h"
 
-@interface DMA1PageContentViewController ()
-@property (copy, nonatomic) NSString *contentString;
+@interface DMA2PageContentL2ViewController ()
+@property (assign, nonatomic) NSString *contentString;
 @property (strong, nonatomic) UILabel *contentLabel;
 @end
 
-@implementation DMA1PageContentViewController
+@implementation DMA2PageContentL2ViewController
 #pragma mark - Property
 - (UILabel *)contentLabel {
     if (!_contentLabel) {
@@ -28,6 +28,11 @@
     return _contentLabel;
 }
 
+- (void)setContentString:(NSString *)contentString {
+    _contentString = contentString;
+    self.contentLabel.text = contentString;
+}
+
 #pragma mark - Lifecycle
 - (instancetype)initWithContentString:(NSString *)content {
     self = [super init];
@@ -40,7 +45,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     [self setupUI];
 }
 
@@ -58,7 +63,7 @@
                                 //[NSLayoutConstraint constraintWithItem:self.contentTitleLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:40.0],
                                 [NSLayoutConstraint constraintWithItem:self.contentLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0]
                                 ]];
-
+    
 }
 
 @end
