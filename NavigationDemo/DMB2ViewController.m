@@ -8,9 +8,21 @@
 
 #import "DMB2ViewController.h"
 
+typedef NS_ENUM(int32_t, DMPanMode) {
+    DMPanModeNone = 0,
+    DMPanModeUp = 1,
+    DMPanModeDown = 2,
+    DMPanModeLeft = 3,
+    DMPanModeRight = 4
+};
+
 @interface DMB2ViewController () <UIGestureRecognizerDelegate>
 @property (strong, nonatomic) UILabel *contentLabel;
 @property (strong, nonatomic) UIButton *pushButton;
+
+@property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
+
+@property (strong, nonatomic) UIViewController *nextViewController;
 @end
 
 @implementation DMB2ViewController
@@ -32,7 +44,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSLog(@"B2 viewDidLoad");
+    
     [self setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    NSLog(@"B2 viewWillAppear");
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    NSLog(@"B2 viewDidAppear");
+    
 }
 
 #pragma mark - Setup
@@ -43,21 +71,29 @@
     UIBarButtonItem *closeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(onCloseBarButtonClicked:)];
     self.navigationItem.rightBarButtonItems = @[closeBarButton];
     
-    // 如果当前压栈的有 VC 时，则增加全屏滑动返回手势。
-    if (self.navigationController.viewControllers.count > 1) {
-        // 获取系统自带滑动手势的 target 对象。
-        id target = self.navigationController.interactivePopGestureRecognizer.delegate;
+    // 通过滑动手势来做交互式 VC 转场。
+    if (!_panGesture) {
+        self.panGesture = [[UIPanGestureRecognizer alloc] init];
+        [self.view addGestureRecognizer:self.panGesture];
+        // 1、如果当前的 Navigation Controller 有压栈的 VC 时，则用 panGesture 来 hook 对应的处理方法来实现全屏滑动返回。
+        if (self.navigationController.viewControllers.count > 1) {
+            // 1.1、获取系统自带滑动返回手势的 target 对象。
+            id target = self.navigationController.interactivePopGestureRecognizer.delegate;
+            
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-        // 创建全屏滑动手势，调用系统自带滑动手势的 target 的 action 方法。
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:target action:@selector(handleNavigationTransition:)];
+            // 1.2、把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
+            [self.panGesture addTarget:target action:@selector(handleNavigationTransition:)];
 #pragma clang diagnostic pop
-        // 设置手势代理，拦截手势触发。
-        pan.delegate = self;
-        // 给导航控制器的 view 添加全屏滑动手势。
-        [self.view addGestureRecognizer:pan];
-        // 禁止使用系统自带的滑动手势。
-        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+            
+            // 1.3、设置手势代理，拦截手势触发。
+            self.panGesture.delegate = self;
+            
+            // 1.4、禁止使用系统自带的滑动手势。
+            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+        }
+        // 2、把当前 VC 作为 panGesture 的一个 target。这样在当前 VC 也能处理到滑动手势。
+        [self.panGesture addTarget:self action:@selector(onPanGesture:)];
     }
 
     
@@ -95,6 +131,102 @@
 - (void)onPushButtonClicked:(UIButton *)button {
     DMB2ViewController *vc = [[DMB2ViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)onPanGesture:(UIPanGestureRecognizer *)gesture {
+    NSLog(@"onPanGesture");
+    
+    static DMPanMode panMode = DMPanModeNone;
+    
+    CGPoint offset = [gesture translationInView:self.view];
+    
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        // 当需要判断上下左右 4 个方向时：
+//        if (fabs(offset.x) < fabs(offset.y)) {
+//            if (offset.y > 0) {
+//                panMode = DMPanModeDown;
+//            } else {
+//                panMode = DMPanModeUp;
+//            }
+//        } else {
+//            if (offset.x > 0) {
+//                panMode = DMPanModeRight;
+//            } else {
+//                panMode = DMPanModeLeft;
+//            }
+//        }
+        
+        // 当只需要判断左右 2 个方向时：
+        if (offset.x > 0) {
+            panMode = DMPanModeRight;
+        } else {
+            panMode = DMPanModeLeft;
+        }
+
+        
+        NSLog(@"PanMode: %d", panMode);
+
+        if (panMode == DMPanModeLeft) {
+            NSLog(@"New VC.");
+            // 左滑时，创建新的 VC 并准备跟着手势移动。
+            if (!_nextViewController) {
+                self.nextViewController = [[DMB2ViewController alloc] init];
+                self.nextViewController.view.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+                [self.view addSubview:self.nextViewController.view];
+            }
+        }
+        
+    } else if (gesture.state == UIGestureRecognizerStateChanged) {
+
+        //NSLog(@"Pan Transition: (%.2f, %.2f)", offset.x, offset.y);
+        
+        if (panMode == DMPanModeLeft) {
+            if (_nextViewController) {
+                CGFloat transitionX = self.view.frame.origin.x + self.view.frame.size.width + offset.x;
+                CGRect transitionFrame = CGRectMake(transitionX, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+                self.nextViewController.view.frame = transitionFrame;
+            }
+        }
+        
+    } else if (gesture.state == UIGestureRecognizerStateCancelled || gesture.state == UIGestureRecognizerStateEnded) {
+
+        if (panMode == DMPanModeLeft) {
+            if (_nextViewController) {
+                
+                // 如果页面拖动超过 1/3 屏，则滑动过来，否则滑回去。
+                if (offset.x < 0 && fabs(offset.x) > self.view.frame.size.width/3) {
+                    [UIView animateWithDuration:0.3 animations:^{
+                        self.nextViewController.view.frame = self.view.frame;
+                    } completion:^(BOOL finished) {
+                        [self.nextViewController.view removeFromSuperview];
+                        [self.navigationController pushViewController:self.nextViewController animated:NO];
+                        self.nextViewController = nil;
+                    }];
+                } else {
+                    [UIView animateWithDuration:0.3 animations:^{
+                        self.nextViewController.view.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+                    } completion:^(BOOL finished) {
+                        [self.nextViewController.view removeFromSuperview];
+                        self.nextViewController = nil;
+                    }];
+                }
+                
+                
+            }
+        }
+        
+        panMode = DMPanModeNone;
+    }
+    
+}
+
+#pragma mark - Utility
+- (UIImage *)snapshotImageOfView:(UIView *)view {
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0);
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 @end
