@@ -13,7 +13,7 @@
 		8247C0ED2089C5700055E407 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8247C0EB2089C5700055E407 /* LaunchScreen.storyboard */; };
 		8247C0F02089C5700055E407 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C0EF2089C5700055E407 /* main.m */; };
 		8247C0F82089C5B90055E407 /* DMB1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C0F72089C5B90055E407 /* DMB1ViewController.m */; };
-		8247C0FE2089C76E0055E407 /* DMB1AnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C0FD2089C76E0055E407 /* DMB1AnimationController.m */; };
+		8247C0FE2089C76E0055E407 /* DMB1AnimatedTransitioning.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C0FD2089C76E0055E407 /* DMB1AnimatedTransitioning.m */; };
 		8247C1012089C7950055E407 /* DMB1NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C1002089C7950055E407 /* DMB1NavigationController.m */; };
 		8247C1072089DB060055E407 /* DMA1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C1062089DB060055E407 /* DMA1ViewController.m */; };
 		8247C10A2089DD180055E407 /* DMA1PageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C1092089DD180055E407 /* DMA1PageContentViewController.m */; };
@@ -23,6 +23,8 @@
 		8247C120208A11460055E407 /* DMA2PageContentL2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C11F208A11460055E407 /* DMA2PageContentL2ViewController.m */; };
 		8247C124208CCC460055E407 /* DMB3ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C123208CCC460055E407 /* DMB3ViewController.m */; };
 		8247C128208CDE690055E407 /* DMB4ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C127208CDE690055E407 /* DMB4ViewController.m */; };
+		829A5035208E0EEC001339A0 /* DMB4NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 829A5034208E0EEC001339A0 /* DMB4NavigationController.m */; };
+		829A503B208E240C001339A0 /* UIViewController+DMB4Navigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 829A503A208E240C001339A0 /* UIViewController+DMB4Navigation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,8 +38,8 @@
 		8247C0EF2089C5700055E407 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8247C0F62089C5B90055E407 /* DMB1ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMB1ViewController.h; sourceTree = "<group>"; };
 		8247C0F72089C5B90055E407 /* DMB1ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMB1ViewController.m; sourceTree = "<group>"; };
-		8247C0FC2089C76E0055E407 /* DMB1AnimationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMB1AnimationController.h; sourceTree = "<group>"; };
-		8247C0FD2089C76E0055E407 /* DMB1AnimationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMB1AnimationController.m; sourceTree = "<group>"; };
+		8247C0FC2089C76E0055E407 /* DMB1AnimatedTransitioning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMB1AnimatedTransitioning.h; sourceTree = "<group>"; };
+		8247C0FD2089C76E0055E407 /* DMB1AnimatedTransitioning.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMB1AnimatedTransitioning.m; sourceTree = "<group>"; };
 		8247C0FF2089C7950055E407 /* DMB1NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMB1NavigationController.h; sourceTree = "<group>"; };
 		8247C1002089C7950055E407 /* DMB1NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMB1NavigationController.m; sourceTree = "<group>"; };
 		8247C1052089DB060055E407 /* DMA1ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMA1ViewController.h; sourceTree = "<group>"; };
@@ -56,6 +58,12 @@
 		8247C123208CCC460055E407 /* DMB3ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMB3ViewController.m; sourceTree = "<group>"; };
 		8247C126208CDE690055E407 /* DMB4ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMB4ViewController.h; sourceTree = "<group>"; };
 		8247C127208CDE690055E407 /* DMB4ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMB4ViewController.m; sourceTree = "<group>"; };
+		829A5033208E0EEC001339A0 /* DMB4NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMB4NavigationController.h; sourceTree = "<group>"; };
+		829A5034208E0EEC001339A0 /* DMB4NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMB4NavigationController.m; sourceTree = "<group>"; };
+		829A5039208E240C001339A0 /* UIViewController+DMB4Navigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DMB4Navigation.h"; sourceTree = "<group>"; };
+		829A503A208E240C001339A0 /* UIViewController+DMB4Navigation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+DMB4Navigation.m"; sourceTree = "<group>"; };
+		829A503C208E278A001339A0 /* barbutton_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_back@2x.png"; sourceTree = "<group>"; };
+		829A503D208E278A001339A0 /* barbutton_back@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_back@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,10 +158,10 @@
 			children = (
 				8247C0F62089C5B90055E407 /* DMB1ViewController.h */,
 				8247C0F72089C5B90055E407 /* DMB1ViewController.m */,
-				8247C0FC2089C76E0055E407 /* DMB1AnimationController.h */,
-				8247C0FD2089C76E0055E407 /* DMB1AnimationController.m */,
 				8247C0FF2089C7950055E407 /* DMB1NavigationController.h */,
 				8247C1002089C7950055E407 /* DMB1NavigationController.m */,
+				8247C0FC2089C76E0055E407 /* DMB1AnimatedTransitioning.h */,
+				8247C0FD2089C76E0055E407 /* DMB1AnimatedTransitioning.m */,
 			);
 			name = NavigationTransition;
 			sourceTree = "<group>";
@@ -172,6 +180,12 @@
 			children = (
 				8247C126208CDE690055E407 /* DMB4ViewController.h */,
 				8247C127208CDE690055E407 /* DMB4ViewController.m */,
+				829A5033208E0EEC001339A0 /* DMB4NavigationController.h */,
+				829A5034208E0EEC001339A0 /* DMB4NavigationController.m */,
+				829A5039208E240C001339A0 /* UIViewController+DMB4Navigation.h */,
+				829A503A208E240C001339A0 /* UIViewController+DMB4Navigation.m */,
+				829A503C208E278A001339A0 /* barbutton_back@2x.png */,
+				829A503D208E278A001339A0 /* barbutton_back@3x.png */,
 			);
 			name = InteractivePopPush2;
 			sourceTree = "<group>";
@@ -256,12 +270,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				829A5035208E0EEC001339A0 /* DMB4NavigationController.m in Sources */,
+				829A503B208E240C001339A0 /* UIViewController+DMB4Navigation.m in Sources */,
 				8247C1172089EB2B0055E407 /* DMB2ViewController.m in Sources */,
 				8247C10A2089DD180055E407 /* DMA1PageContentViewController.m in Sources */,
 				8247C1012089C7950055E407 /* DMB1NavigationController.m in Sources */,
 				8247C11A2089EC960055E407 /* DMA2ViewController.m in Sources */,
 				8247C0F02089C5700055E407 /* main.m in Sources */,
-				8247C0FE2089C76E0055E407 /* DMB1AnimationController.m in Sources */,
+				8247C0FE2089C76E0055E407 /* DMB1AnimatedTransitioning.m in Sources */,
 				8247C11D208A11360055E407 /* DMA2PageContentL1ViewController.m in Sources */,
 				8247C0F82089C5B90055E407 /* DMB1ViewController.m in Sources */,
 				8247C128208CDE690055E407 /* DMB4ViewController.m in Sources */,

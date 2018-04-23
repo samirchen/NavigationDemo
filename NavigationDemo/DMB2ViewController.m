@@ -88,11 +88,9 @@
         // 获取系统自带滑动返回手势的 target 对象。
         id target = self.navigationController.interactivePopGestureRecognizer.delegate;
         
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
         // 把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
-        [panGesture addTarget:target action:@selector(handleNavigationTransition:)];
-#pragma clang diagnostic pop
+        SEL actionSelector = NSSelectorFromString(@"handleNavigationTransition:");
+        [panGesture addTarget:target action:actionSelector];
         
         // 设置手势代理，拦截手势触发。
         panGesture.delegate = self;

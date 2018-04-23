@@ -1,5 +1,5 @@
 //
-//  DMB1AnimationController.h
+//  DMB1AnimatedTransitioning.h
 //  NavigationDemo
 //
 //  Created by qiufu on 20/04/2018.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface DMB1AnimationController : NSObject<UIViewControllerAnimatedTransitioning>
+@interface DMB1AnimatedTransitioning : NSObject<UIViewControllerAnimatedTransitioning>
 
 @property (assign, nonatomic) UINavigationControllerOperation operation;
 

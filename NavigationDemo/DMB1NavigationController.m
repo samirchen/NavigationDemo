@@ -7,7 +7,7 @@
 //
 
 #import "DMB1NavigationController.h"
-#import "DMB1AnimationController.h"
+#import "DMB1AnimatedTransitioning.h"
 
 @interface DMB1NavigationController () <UINavigationControllerDelegate>
 
@@ -23,7 +23,7 @@
 
 #pragma mark - UINavigationControllerDelegate
 - (nullable id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
-    DMB1AnimationController *ac = [[DMB1AnimationController alloc] init];
+    DMB1AnimatedTransitioning *ac = [[DMB1AnimatedTransitioning alloc] init];
     ac.operation = operation;
     return ac;
 }

@@ -1,14 +1,14 @@
 //
-//  DMB1AnimationController.m
+//  DMB1AnimatedTransitioning.m
 //  NavigationDemo
 //
 //  Created by qiufu on 20/04/2018.
 //  Copyright © 2018 CX. All rights reserved.
 //
 
-#import "DMB1AnimationController.h"
+#import "DMB1AnimatedTransitioning.h"
 
-@implementation DMB1AnimationController
+@implementation DMB1AnimatedTransitioning
 
 #pragma mark - UIViewControllerAnimatedTransitioning
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {

@@ -10,6 +10,7 @@
 #import "DMB2ViewController.h"
 #import "DMB3ViewController.h"
 #import "DMB4ViewController.h"
+#import "DMB4NavigationController.h"
 
 @interface DMB1ViewController ()
 @property (strong, nonatomic) UILabel *contentLabel;
@@ -75,6 +76,11 @@
 }
 
 #pragma mark - Action
+- (void)onPushButtonClicked:(UIButton *)button {
+    DMB1ViewController *vc = [[DMB1ViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 - (void)onNextBarButtonClicked:(UIBarButtonItem *)barButtonItem {
     DMB2ViewController *vc = [[DMB2ViewController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc]; // 使用系统的 UINavigationController。
@@ -89,13 +95,11 @@
 
 - (void)onNext3BarButtonClicked:(UIBarButtonItem *)barButtonItem {
     DMB4ViewController *vc = [[DMB4ViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc]; // 使用系统的 UINavigationController。
+    DMB4NavigationController *nav = [[DMB4NavigationController alloc] initWithRootViewController:vc];
+    nav.fullScreenPopGestureEnabled = YES;
+    
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (void)onPushButtonClicked:(UIButton *)button {
-    DMB1ViewController *vc = [[DMB1ViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
-}
 
 @end
