@@ -57,37 +57,11 @@ typedef NS_ENUM(int32_t, DMPanMode) {
     [super viewWillAppear:animated];
     
     NSLog(@"%s, %d, %@", __func__, __LINE__, self);
-    
+
     if (self.navigationController) {
-        if (!_panGesture) {
-            // 通过滑动手势来做交互式 VC 转场。
-            self.panGesture = [[UIPanGestureRecognizer alloc] init];
-            [self.view addGestureRecognizer:self.panGesture];
-            // 1、如果当前的 Navigation Controller 有压栈的 VC 时，则用 panGesture 来 hook 对应的处理方法来实现全屏右滑 Pop 返回。
-            if (self.navigationController.viewControllers.count > 1) {
-                // 1.1、获取系统自带滑动返回手势的 target 对象。
-                id target = self.navigationController.interactivePopGestureRecognizer.delegate;
-                
-                // 1.2、把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
-                SEL actionSelector = NSSelectorFromString(@"handleNavigationTransition:");
-                [self.panGesture addTarget:target action:actionSelector];
-                
-                // 1.3、设置手势代理，拦截手势触发。
-                self.panGesture.delegate = self;
-                
-                // 1.4、禁止使用系统自带的滑动手势。
-                self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-            }
-            
-            // 2、把当前 VC 作为 panGesture 的另一个 target，这样在当前 VC 也能处理到滑动手势，从而处理左滑 Push 的操作。
-            [self.panGesture addTarget:self action:@selector(onPanGesture:)];
-        }
-        
-        
-        // 更新 content label.
         self.contentLabel.text = [NSString stringWithFormat:@"交互式转场[%d]", (int32_t) self.navigationController.viewControllers.count - 1];
     }
-    
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -122,6 +96,14 @@ typedef NS_ENUM(int32_t, DMPanMode) {
     self.navigationItem.title = @"交互式转场-PopPush1";
     UIBarButtonItem *closeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(onCloseBarButtonClicked:)];
     self.navigationItem.rightBarButtonItems = @[closeBarButton];
+    
+    // 通过滑动手势来做交互式 VC 转场。
+    self.panGesture = [[UIPanGestureRecognizer alloc] init];
+    [self.view addGestureRecognizer:self.panGesture];
+    self.panGesture.delegate = self;
+    // 把当前 VC 作为 panGesture 的另一个 target，这样在当前 VC 也能处理到滑动手势，从而处理左滑 Push 的操作。
+    [self.panGesture addTarget:self action:@selector(onPanGesture:)];
+
     
     // Content label.
     self.contentLabel.text = @"交互式转场";
@@ -247,5 +229,31 @@ typedef NS_ENUM(int32_t, DMPanMode) {
     }
     
 }
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer == self.panGesture) {
+        if ([[self.navigationController valueForKey:@"_isTransitioning"] boolValue]) {
+            return NO;
+        }
+
+        // 如果当前的 Navigation Controller 有压栈的 VC 时，则用 panGesture 来 hook 对应的处理方法来实现全屏右滑 Pop 返回。
+        if (self.navigationController.viewControllers.count > 1) {
+            // 获取系统自带滑动返回手势的 target 对象。把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
+            id target = self.navigationController.interactivePopGestureRecognizer.delegate;
+            SEL action = NSSelectorFromString(@"handleNavigationTransition:");
+            [self.panGesture addTarget:target action:action];
+            
+            // 禁止使用系统自带的滑动手势。
+            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+        }
+
+        return YES;
+        
+    }
+    
+    return YES;
+}
+
 
 @end

@@ -84,17 +84,13 @@
     if (self.navigationController.viewControllers.count > 1) {
         UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] init];
         [self.view addGestureRecognizer:panGesture];
-
-        // 获取系统自带滑动返回手势的 target 对象。
-        id target = self.navigationController.interactivePopGestureRecognizer.delegate;
-        
-        // 把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
-        SEL actionSelector = NSSelectorFromString(@"handleNavigationTransition:");
-        [panGesture addTarget:target action:actionSelector];
-        
-        // 设置手势代理，拦截手势触发。
         panGesture.delegate = self;
-        
+
+        // 获取系统自带滑动返回手势的 target 对象。把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
+        id target = self.navigationController.interactivePopGestureRecognizer.delegate;
+        SEL action = NSSelectorFromString(@"handleNavigationTransition:");
+        [panGesture addTarget:target action:action];
+                
         // 禁止使用系统自带的滑动手势。
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
