@@ -7,6 +7,7 @@
 //
 
 #import "DMB4ViewController.h"
+#import "UIViewController+DMB4Navigation.h"
 
 @interface DMB4ViewController ()
 @property (strong, nonatomic) UILabel *contentLabel;
@@ -83,7 +84,7 @@
     
     
     // Content label.
-    self.contentLabel.text = [NSString stringWithFormat:@"交互式转场[%d]", (int32_t) self.navigationController.viewControllers.count - 1];
+    self.contentLabel.text = [NSString stringWithFormat:@"交互式转场[%d]", (int32_t) self.dm_navigationController.viewControllers.count - 1];
     [self.view addSubview:self.contentLabel];
     self.contentLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:@[
@@ -107,7 +108,6 @@
                                 ]];
     
 }
-
 
 #pragma mark - Action
 - (void)onCloseBarButtonClicked:(UIBarButtonItem *)barButtonItem {

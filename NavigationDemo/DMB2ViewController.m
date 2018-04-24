@@ -137,4 +137,28 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        UIPanGestureRecognizer *panGesture = (UIPanGestureRecognizer *) gestureRecognizer;
+        if ([[self.navigationController valueForKey:@"_isTransitioning"] boolValue]) {
+            return NO;
+        }
+        
+        if (self.navigationController.viewControllers.count <= 1) {
+            return NO;
+        }
+        
+        // 不响应左滑。
+        CGPoint translation = [panGesture translationInView:gestureRecognizer.view];
+        if (translation.x <= 0) {
+            return NO;
+        }
+
+    }
+    
+    return YES;
+}
+
+
 @end

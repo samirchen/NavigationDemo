@@ -25,6 +25,8 @@
 		8247C128208CDE690055E407 /* DMB4ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8247C127208CDE690055E407 /* DMB4ViewController.m */; };
 		829A5035208E0EEC001339A0 /* DMB4NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 829A5034208E0EEC001339A0 /* DMB4NavigationController.m */; };
 		829A503B208E240C001339A0 /* UIViewController+DMB4Navigation.m in Sources */ = {isa = PBXBuildFile; fileRef = 829A503A208E240C001339A0 /* UIViewController+DMB4Navigation.m */; };
+		829A503E208ED0D8001339A0 /* barbutton_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 829A503C208E278A001339A0 /* barbutton_back@2x.png */; };
+		829A503F208ED0D8001339A0 /* barbutton_back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 829A503D208E278A001339A0 /* barbutton_back@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -257,6 +259,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				829A503E208ED0D8001339A0 /* barbutton_back@2x.png in Resources */,
+				829A503F208ED0D8001339A0 /* barbutton_back@3x.png in Resources */,
 				8247C0ED2089C5700055E407 /* LaunchScreen.storyboard in Resources */,
 				8247C0EA2089C5700055E407 /* Assets.xcassets in Resources */,
 				8247C0E82089C5700055E407 /* Main.storyboard in Resources */,

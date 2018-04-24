@@ -144,8 +144,7 @@ static NSValue *dm_tabBarRectValue;
 
 #pragma mark - DMB4NavigationController Implementation
 @interface DMB4NavigationController () <UINavigationControllerDelegate, UIGestureRecognizerDelegate>
-@property (strong, nonatomic) UIPanGestureRecognizer *popPanGesture;
-@property (strong, nonatomic) id popGestureDelegate;
+@property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 @end
 
 @implementation DMB4NavigationController
@@ -179,35 +178,51 @@ static NSValue *dm_tabBarRectValue;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // 隐藏最底下实际控制导航的 Navigation Controller 的 Navigation Bar，最终显示的是 DMB4WrapNavigationController 的 Navigation Bar。
     [self setNavigationBarHidden:YES];
+    
+    // 设置 UINavigationControllerDelegate。
     self.delegate = self;
     
-    // 用自己增加的全屏滑动手势 popPanGesture 来 hook 原来的边缘滑动手势的 Pop 处理，从而支持全屏 Pop。
-    self.popGestureDelegate = self.interactivePopGestureRecognizer.delegate;
-    SEL action = NSSelectorFromString(@"handleNavigationTransition:");
-    self.popPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self.popGestureDelegate action:action];
-    self.popPanGesture.maximumNumberOfTouches = 1;
+    // 自己增加滑动手势来做交互式 VC 转场。
+    self.panGesture = [[UIPanGestureRecognizer alloc] init];
+    self.panGesture.maximumNumberOfTouches = 1;
+    self.panGesture.delegate = self;
+    [self.view addGestureRecognizer:self.panGesture];
     
+    // 给 panGesture 增加一个 target 和对应的 action，从而也能处理左滑 Push 的操作。
+    [self.panGesture addTarget:self action:@selector(onPanGesture:)];
+    
+}
+
+#pragma mark - Action
+- (void)onPanGesture:(UIPanGestureRecognizer *)gesture {
+    NSLog(@"%s, %d, %@", __func__, __LINE__, self);
 }
 
 
 #pragma mark - UINavigationControllerDelegate
-
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     
     BOOL isRootVC = (viewController == navigationController.viewControllers.firstObject);
-    
+
     if (viewController.dm_fullScreenPopGestureEnabled) {
+        // 当前显示的不是第一个 VC 时，用自己增加的全屏滑动手势 panGesture 来 hook 原来的边缘滑动手势的 Pop 处理，从而支持全屏 Pop。
+        // 获取系统自带滑动返回手势的 target 对象。把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
+        id target = self.interactivePopGestureRecognizer.delegate; // UINavigationInteractiveTransition.
+        SEL action = NSSelectorFromString(@"handleNavigationTransition:");
         if (isRootVC) {
-            [self.view removeGestureRecognizer:self.popPanGesture];
+            [self.panGesture removeTarget:target action:action];
         } else {
-            [self.view addGestureRecognizer:self.popPanGesture];
+            [self.panGesture addTarget:target action:action];
         }
-        self.interactivePopGestureRecognizer.delegate = self.popGestureDelegate;
+        // 禁止使用系统自带的滑动手势。
         self.interactivePopGestureRecognizer.enabled = NO;
     } else {
-        [self.view removeGestureRecognizer:self.popPanGesture];
-        self.interactivePopGestureRecognizer.delegate = self;
+        id target = self.interactivePopGestureRecognizer.delegate;
+        SEL action = NSSelectorFromString(@"handleNavigationTransition:");
+        [self.panGesture removeTarget:target action:action];
+
         self.interactivePopGestureRecognizer.enabled = !isRootVC;
     }
     
@@ -215,14 +230,12 @@ static NSValue *dm_tabBarRectValue;
 
 #pragma mark - UIGestureRecognizerDelegate
 // 修复有水平方向滚动的 ScrollView 时边缘返回手势失效的问题。
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return [gestureRecognizer isKindOfClass:UIScreenEdgePanGestureRecognizer.class];
 }
-
-
 
 @end
