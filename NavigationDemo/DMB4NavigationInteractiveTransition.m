@@ -21,7 +21,8 @@
 - (UIPercentDrivenInteractiveTransition *)myInteractiveTransition{
     if (!_myInteractiveTransition) {
         _myInteractiveTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
-        _myInteractiveTransition.completionCurve = UIViewAnimationCurveEaseOut;
+        // 这里要设置为 UIViewAnimationCurveLinear，否则取消时可能出现动画异常。
+        _myInteractiveTransition.completionCurve = UIViewAnimationCurveLinear;
     }
     
     return _myInteractiveTransition;
@@ -47,7 +48,7 @@
 
 #pragma mark - Action
 - (void)onPanGesture:(UIPanGestureRecognizer *)panGesture {
-    CGFloat progress = [panGesture translationInView:panGesture.view].x / panGesture.view.bounds.size.width;
+    CGFloat progress = [panGesture translationInView:panGesture.view].x / (panGesture.view.bounds.size.width * 1.0);
     
     if (panGesture.state == UIGestureRecognizerStateBegan) {
         
@@ -68,13 +69,13 @@
         
     } else if (panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) {
         
-        //if (fabs(progress) > 0.3) {
-        //    [self.myInteractiveTransition finishInteractiveTransition];
-        //} else {
-        //    [self.myInteractiveTransition cancelInteractiveTransition];
-        //}
-        
-        [self.myInteractiveTransition finishInteractiveTransition];
+        // 根据 Interactive Push 移动的距离来判断是否取消这次 transition。
+        // 这里会影响 transitionContext.transitionWasCancelled 的结果。
+        if (fabs(progress) > 0.34) {
+            [self.myInteractiveTransition finishInteractiveTransition];
+        } else {
+            [self.myInteractiveTransition cancelInteractiveTransition];
+        }        
     }
 }
 

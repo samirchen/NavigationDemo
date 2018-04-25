@@ -12,7 +12,7 @@
 
 #pragma mark - UIViewControllerAnimatedTransitioning
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
-    return 0.5;
+    return 0.3;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
@@ -43,7 +43,7 @@
         fromView.frame = fromViewEndFrame;
         toView.frame = toViewEndFrame;
     } completion:^(BOOL finished) {
-        [transitionContext completeTransition:YES];
+        [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
     }];
 }
 
