@@ -68,11 +68,13 @@
         
     } else if (panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) {
         
-        if (fabs(progress) > 0.3) {
-            [self.myInteractiveTransition finishInteractiveTransition];
-        } else {
-            [self.myInteractiveTransition cancelInteractiveTransition];
-        }
+        //if (fabs(progress) > 0.3) {
+        //    [self.myInteractiveTransition finishInteractiveTransition];
+        //} else {
+        //    [self.myInteractiveTransition cancelInteractiveTransition];
+        //}
+        
+        [self.myInteractiveTransition finishInteractiveTransition];
     }
 }
 
