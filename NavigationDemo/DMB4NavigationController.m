@@ -8,6 +8,7 @@
 
 #import "DMB4NavigationController.h"
 #import "UIViewController+DMB4Navigation.h"
+#import "DMB4NavigationInteractiveTransition.h"
 
 #pragma mark - DMB4WrapNavigationController Implementation
 // DMB4WrapNavigationController 用来包住最外层实际的 ViewController，为其提供独立的 Navigation Bar，而不受最底下的统一的 Navigation Bar 的影响，解决两个 ViewController 的导航栏颜色风格不一样做切换时的视觉问题。
@@ -145,6 +146,7 @@ static NSValue *dm_tabBarRectValue;
 #pragma mark - DMB4NavigationController Implementation
 @interface DMB4NavigationController () <UINavigationControllerDelegate, UIGestureRecognizerDelegate>
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
+@property (strong, nonatomic) DMB4NavigationInteractiveTransition *interactiveTransition;
 @end
 
 @implementation DMB4NavigationController
@@ -156,6 +158,14 @@ static NSValue *dm_tabBarRectValue;
         [viewControllers addObject:wrapViewController.rootViewController];
     }
     return viewControllers.copy;
+}
+
+- (DMB4NavigationInteractiveTransition *)interactiveTransition {
+    if (!_interactiveTransition) {
+        _interactiveTransition = [[DMB4NavigationInteractiveTransition alloc] initWithNavigationController:self];
+    }
+    
+    return _interactiveTransition;
 }
 
 #pragma mark - Lifecycle
@@ -197,7 +207,21 @@ static NSValue *dm_tabBarRectValue;
 
 #pragma mark - Action
 - (void)onPanGesture:(UIPanGestureRecognizer *)gesture {
-    NSLog(@"%s, %d, %@", __func__, __LINE__, self);
+//    NSLog(@"%s, %d, %@", __func__, __LINE__, self);
+//
+//    if (gesture.state == UIGestureRecognizerStateBegan) {
+//        CGPoint translation = [gesture translationInView:gesture.view];
+//        if (translation.x < 0) {
+//            self.delegate = self.interactiveTransition;
+//            
+//            if ([self.navigationControllerDelegate respondsToSelector:@selector(navigationControllerShouldPushToNextViewController:)]) {
+//                [self.navigationControllerDelegate navigationControllerShouldPushToNextViewController:self];
+//            }
+//            
+//        }
+//    } else if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled) {
+//        
+//    }
 }
 
 
@@ -229,6 +253,27 @@ static NSValue *dm_tabBarRectValue;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
+
+//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+//    if (gestureRecognizer == self.panGesture) {
+//
+//        CGPoint transition = [self.panGesture translationInView:self.view];
+//
+//        if (transition.x < 0) {
+//            // 左滑，进入 Push 操作。
+//            SEL action = NSSelectorFromString(@"onPanGesture:");
+//            [self.panGesture addTarget:self.interactiveTransition action:action];
+//
+//            return YES;
+//        }
+//
+//
+//        return YES;
+//    }
+//
+//    return YES;
+//}
+
 // 修复有水平方向滚动的 ScrollView 时边缘返回手势失效的问题。
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;

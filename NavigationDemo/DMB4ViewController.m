@@ -8,11 +8,11 @@
 
 #import "DMB4ViewController.h"
 #import "UIViewController+DMB4Navigation.h"
+#import "DMB4NavigationController.h"
 
-@interface DMB4ViewController ()
+@interface DMB4ViewController () <DMB4NavigationControllerDelegate>
 @property (strong, nonatomic) UILabel *contentLabel;
 @property (strong, nonatomic) UIButton *pushButton;
-
 @end
 
 @implementation DMB4ViewController
@@ -38,6 +38,8 @@
     [super viewDidLoad];
     
     NSLog(@"%s, %d, %@", __func__, __LINE__, self);
+    
+    //self.dm_navigationController.navigationControllerDelegate = self;
     
     [self setupUI];
 }
@@ -101,7 +103,7 @@
     [self.view addSubview:self.pushButton];
     self.pushButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:@[
-                                [NSLayoutConstraint constraintWithItem:self.pushButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0],
+                                [NSLayoutConstraint constraintWithItem:self.pushButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:100.0],
                                 [NSLayoutConstraint constraintWithItem:self.pushButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0],
                                 [NSLayoutConstraint constraintWithItem:self.pushButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:60.0],
                                 [NSLayoutConstraint constraintWithItem:self.pushButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0]
@@ -115,6 +117,12 @@
 }
 
 - (void)onPushButtonClicked:(UIButton *)button {
+    DMB4ViewController *vc = [[DMB4ViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - DMB4NavigationControllerDelegate
+- (void)navigationControllerShouldPushToNextViewController:(DMB4NavigationController *)navigationController {
     DMB4ViewController *vc = [[DMB4ViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
