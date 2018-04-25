@@ -7,10 +7,6 @@
 //
 
 #import "DMB1ViewController.h"
-#import "DMB2ViewController.h"
-#import "DMB3ViewController.h"
-#import "DMB4ViewController.h"
-#import "DMB4NavigationController.h"
 
 @interface DMB1ViewController ()
 @property (strong, nonatomic) UILabel *contentLabel;
@@ -44,11 +40,9 @@
     self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(256)/255.0 green:arc4random_uniform(256)/255.0 blue:arc4random_uniform(256)/255.0 alpha:1.0f];
     
     self.navigationItem.title = @"B1";
-    UIBarButtonItem *B2BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B2" style:UIBarButtonItemStylePlain target:self action:@selector(onB2BarButtonClicked:)];
-    UIBarButtonItem *B3BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B3" style:UIBarButtonItemStylePlain target:self action:@selector(onB3BarButtonClicked:)];
-    UIBarButtonItem *B4BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B4" style:UIBarButtonItemStylePlain target:self action:@selector(onB4BarButtonClicked:)];
-    self.navigationItem.rightBarButtonItems = @[B2BarButton, B3BarButton, B4BarButton];
-    
+    UIBarButtonItem *closeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(onCloseBarButtonClicked:)];
+    self.navigationItem.rightBarButtonItems = @[closeBarButton];
+
     // Content label.
     self.contentLabel.text = [NSString stringWithFormat:@"自定义转场[%d]", (int32_t) self.navigationController.viewControllers.count - 1];
     [self.view addSubview:self.contentLabel];
@@ -81,25 +75,10 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)onB2BarButtonClicked:(UIBarButtonItem *)barButtonItem {
-    DMB2ViewController *vc = [[DMB2ViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc]; // 使用系统的 UINavigationController。
-    [self presentViewController:nav animated:YES completion:nil];
+- (void)onCloseBarButtonClicked:(UIBarButtonItem *)barButtonItem {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)onB3BarButtonClicked:(UIBarButtonItem *)barButtonItem {
-    DMB3ViewController *vc = [[DMB3ViewController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc]; // 使用系统的 UINavigationController。
-    [self presentViewController:nav animated:YES completion:nil];
-}
-
-- (void)onB4BarButtonClicked:(UIBarButtonItem *)barButtonItem {
-    DMB4ViewController *vc = [[DMB4ViewController alloc] init];
-    DMB4NavigationController *nav = [[DMB4NavigationController alloc] initWithRootViewController:vc];
-    nav.fullScreenPopGestureEnabled = YES;
-    nav.fullScreenPushGestureEnabled = YES;
-    [self presentViewController:nav animated:YES completion:nil];
-}
 
 
 @end

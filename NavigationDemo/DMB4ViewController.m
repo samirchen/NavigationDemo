@@ -9,6 +9,10 @@
 #import "DMB4ViewController.h"
 #import "UIViewController+DMB4Navigation.h"
 #import "DMB4NavigationController.h"
+#import "DMB1ViewController.h"
+#import "DMB1NavigationController.h"
+#import "DMB2ViewController.h"
+#import "DMB3ViewController.h"
 
 @interface DMB4ViewController () <DMB4NavigationControllerProtocol>
 @property (strong, nonatomic) UILabel *contentLabel;
@@ -82,9 +86,11 @@
     self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(256)/255.0 green:arc4random_uniform(256)/255.0 blue:arc4random_uniform(256)/255.0 alpha:1.0f];
     
     self.navigationItem.title = @"B4";
-    UIBarButtonItem *closeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(onCloseBarButtonClicked:)];
-    self.navigationItem.rightBarButtonItems = @[closeBarButton];
-    
+    UIBarButtonItem *B1BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B1" style:UIBarButtonItemStylePlain target:self action:@selector(onB1BarButtonClicked:)];
+    UIBarButtonItem *B2BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B2" style:UIBarButtonItemStylePlain target:self action:@selector(onB2BarButtonClicked:)];
+    UIBarButtonItem *B3BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B3" style:UIBarButtonItemStylePlain target:self action:@selector(onB3BarButtonClicked:)];
+    self.navigationItem.rightBarButtonItems = @[B1BarButton, B2BarButton, B3BarButton];
+
     
     // Content label.
     self.contentLabel.text = [NSString stringWithFormat:@"交互式转场[%d]", (int32_t) self.dm_navigationController.viewControllers.count - 1];
@@ -120,12 +126,26 @@
 }
 
 #pragma mark - Action
-- (void)onCloseBarButtonClicked:(UIBarButtonItem *)barButtonItem {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (void)onPushButtonClicked:(UIButton *)button {
     [self goToNextPage];
+}
+
+- (void)onB1BarButtonClicked:(UIBarButtonItem *)barButtonItem {
+    DMB1ViewController *vc = [[DMB1ViewController alloc] init];
+    DMB1NavigationController *nav = [[DMB1NavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)onB2BarButtonClicked:(UIBarButtonItem *)barButtonItem {
+    DMB2ViewController *vc = [[DMB2ViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc]; // 使用系统的 UINavigationController。
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)onB3BarButtonClicked:(UIBarButtonItem *)barButtonItem {
+    DMB3ViewController *vc = [[DMB3ViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc]; // 使用系统的 UINavigationController。
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 #pragma mark - DMB4NavigationControllerProtocol

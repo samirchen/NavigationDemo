@@ -28,16 +28,16 @@
     aNavC.title = @"A";
     
     // 使用自定义的 Navigation Controller 来实现自定义的 push/pop 转场效果。
-    DMB1ViewController *b1VC = [[DMB1ViewController alloc] init];
-    DMB1NavigationController *bNavC = [[DMB1NavigationController alloc] initWithRootViewController:b1VC];
+    DMB4ViewController *b4VC = [[DMB4ViewController alloc] init];
+    DMB4NavigationController *bNavC = [[DMB4NavigationController alloc] initWithRootViewController:b4VC];
     bNavC.title = @"B";
+    bNavC.fullScreenPopGestureEnabled = YES;
+    bNavC.fullScreenPushGestureEnabled = YES;
 
-    DMB4ViewController *c1VC = [[DMB4ViewController alloc] init];
-    DMB4NavigationController *cNavC = [[DMB4NavigationController alloc] initWithRootViewController:c1VC];
-    cNavC.title = @"B4+TabBar";
-    cNavC.fullScreenPopGestureEnabled = YES;
-    cNavC.fullScreenPushGestureEnabled = YES;
-    
+    UIViewController *c1VC = [[UIViewController alloc] init];
+    UINavigationController *cNavC = [[UINavigationController alloc] initWithRootViewController:c1VC];
+    cNavC.title = @"C";
+
 
     UIViewController *d1VC = [[UIViewController alloc] init];
     UINavigationController *dNavC = [[UINavigationController alloc] initWithRootViewController:d1VC];
