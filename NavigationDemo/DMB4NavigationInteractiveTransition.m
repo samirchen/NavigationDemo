@@ -11,29 +11,28 @@
 #import "DMB4AnimatedTransitioning.h"
 
 @interface DMB4NavigationInteractiveTransition ()
-
-@property (strong, nonatomic) UIPercentDrivenInteractiveTransition *interactiveTransition;
 @property (weak, nonatomic) DMB4NavigationController *navigationController;
-@property (strong, nonatomic) DMB4AnimatedTransitioning *animatedTransitioning;
-
+@property (strong, nonatomic) UIPercentDrivenInteractiveTransition *myInteractiveTransition;
+@property (strong, nonatomic) DMB4AnimatedTransitioning *myAnimatedTransitioning;
 @end
 
 @implementation DMB4NavigationInteractiveTransition
 #pragma mark - Property
-- (UIPercentDrivenInteractiveTransition *)interactiveTransition{
-    if (!_interactiveTransition) {
-        _interactiveTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
-        _interactiveTransition.completionCurve = UIViewAnimationCurveEaseOut;
+- (UIPercentDrivenInteractiveTransition *)myInteractiveTransition{
+    if (!_myInteractiveTransition) {
+        _myInteractiveTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
+        _myInteractiveTransition.completionCurve = UIViewAnimationCurveEaseOut;
     }
     
-    return _interactiveTransition;
+    return _myInteractiveTransition;
 }
 
-- (DMB4AnimatedTransitioning *)animatedTransitioning{
-    if (!_animatedTransitioning) {
-        _animatedTransitioning = [[DMB4AnimatedTransitioning alloc] init];
+- (DMB4AnimatedTransitioning *)myAnimatedTransitioning{
+    if (!_myAnimatedTransitioning) {
+        _myAnimatedTransitioning = [[DMB4AnimatedTransitioning alloc] init];
+        _myAnimatedTransitioning.operation = UINavigationControllerOperationPush;
     }
-    return _animatedTransitioning;
+    return _myAnimatedTransitioning;
 }
 
 #pragma mark - Lifecycle
@@ -52,7 +51,7 @@
     
     if (panGesture.state == UIGestureRecognizerStateBegan) {
         
-        [self.interactiveTransition updateInteractiveTransition:0];
+        [self.myInteractiveTransition updateInteractiveTransition:0];
         
     } else if (panGesture.state == UIGestureRecognizerStateChanged) {
         
@@ -65,14 +64,14 @@
             progress = 0;
         }
         
-        [self.interactiveTransition updateInteractiveTransition:progress];
+        [self.myInteractiveTransition updateInteractiveTransition:progress];
         
     } else if (panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) {
         
         if (fabs(progress) > 0.3) {
-            [self.interactiveTransition finishInteractiveTransition];
+            [self.myInteractiveTransition finishInteractiveTransition];
         } else {
-            [self.interactiveTransition cancelInteractiveTransition];
+            [self.myInteractiveTransition cancelInteractiveTransition];
         }
     }
 }
@@ -81,7 +80,8 @@
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationControxller animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
 
     if (operation == UINavigationControllerOperationPush) {
-        return self.animatedTransitioning;
+        self.myAnimatedTransitioning.operation = UINavigationControllerOperationPush;
+        return self.myAnimatedTransitioning;
     }
 
     return nil;
@@ -90,7 +90,7 @@
 
 - (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController {
     
-    return self.interactiveTransition;
+    return self.myInteractiveTransition;
 }
 
 @end

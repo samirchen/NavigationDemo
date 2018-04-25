@@ -41,6 +41,7 @@
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
     viewController.dm_navigationController = (DMB4NavigationController *) self.navigationController;
     viewController.dm_fullScreenPopGestureEnabled = viewController.dm_navigationController.fullScreenPopGestureEnabled;
+    viewController.dm_fullScreenPushGestureEnabled = viewController.dm_navigationController.fullScreenPushGestureEnabled;
     
     UIImage *backButtonImage = viewController.dm_navigationController.backButtonImage;
     
@@ -144,9 +145,11 @@ static NSValue *dm_tabBarRectValue;
 
 
 #pragma mark - DMB4NavigationController Implementation
-@interface DMB4NavigationController () <UINavigationControllerDelegate, UIGestureRecognizerDelegate>
+@interface DMB4NavigationController () <UIGestureRecognizerDelegate>
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
-@property (strong, nonatomic) DMB4NavigationInteractiveTransition *interactiveTransition;
+@property (weak, nonatomic) id currentPanGestureTarget;
+@property (assign, nonatomic) SEL currentPanGestureAction;
+@property (strong, nonatomic) DMB4NavigationInteractiveTransition *myInteractiveTransition; // 这个名字不能用 interactiveTransition 会与系统自带的属性名冲突而 crash。
 @end
 
 @implementation DMB4NavigationController
@@ -160,12 +163,12 @@ static NSValue *dm_tabBarRectValue;
     return viewControllers.copy;
 }
 
-- (DMB4NavigationInteractiveTransition *)interactiveTransition {
-    if (!_interactiveTransition) {
-        _interactiveTransition = [[DMB4NavigationInteractiveTransition alloc] initWithNavigationController:self];
+- (DMB4NavigationInteractiveTransition *)myInteractiveTransition {
+    if (!_myInteractiveTransition) {
+        _myInteractiveTransition = [[DMB4NavigationInteractiveTransition alloc] initWithNavigationController:self];
     }
-    
-    return _interactiveTransition;
+
+    return _myInteractiveTransition;
 }
 
 #pragma mark - Lifecycle
@@ -190,89 +193,130 @@ static NSValue *dm_tabBarRectValue;
     
     // 隐藏最底下实际控制导航的 Navigation Controller 的 Navigation Bar，最终显示的是 DMB4WrapNavigationController 的 Navigation Bar。
     [self setNavigationBarHidden:YES];
-    
-    // 设置 UINavigationControllerDelegate。
-    self.delegate = self;
-    
+
     // 自己增加滑动手势来做交互式 VC 转场。
     self.panGesture = [[UIPanGestureRecognizer alloc] init];
     self.panGesture.maximumNumberOfTouches = 1;
     self.panGesture.delegate = self;
     [self.view addGestureRecognizer:self.panGesture];
-    
     // 给 panGesture 增加一个 target 和对应的 action，从而也能处理左滑 Push 的操作。
     [self.panGesture addTarget:self action:@selector(onPanGesture:)];
-    
+    // 禁止使用系统自带的滑动手势。
+    self.interactivePopGestureRecognizer.enabled = NO;
+
 }
 
 #pragma mark - Action
 - (void)onPanGesture:(UIPanGestureRecognizer *)gesture {
-//    NSLog(@"%s, %d, %@", __func__, __LINE__, self);
-//
-//    if (gesture.state == UIGestureRecognizerStateBegan) {
-//        CGPoint translation = [gesture translationInView:gesture.view];
-//        if (translation.x < 0) {
-//            self.delegate = self.interactiveTransition;
-//            
-//            if ([self.navigationControllerDelegate respondsToSelector:@selector(navigationControllerShouldPushToNextViewController:)]) {
-//                [self.navigationControllerDelegate navigationControllerShouldPushToNextViewController:self];
-//            }
-//            
-//        }
-//    } else if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled) {
-//        
-//    }
-}
+    NSLog(@"%s, %d, %@", __func__, __LINE__, self);
 
-
-#pragma mark - UINavigationControllerDelegate
-- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    
-    BOOL isRootVC = (viewController == navigationController.viewControllers.firstObject);
-
-    if (viewController.dm_fullScreenPopGestureEnabled) {
-        // 当前显示的不是第一个 VC 时，用自己增加的全屏滑动手势 panGesture 来 hook 原来的边缘滑动手势的 Pop 处理，从而支持全屏 Pop。
-        // 获取系统自带滑动返回手势的 target 对象。把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
-        id target = self.interactivePopGestureRecognizer.delegate; // UINavigationInteractiveTransition.
-        SEL action = NSSelectorFromString(@"handleNavigationTransition:");
-        if (isRootVC) {
-            [self.panGesture removeTarget:target action:action];
-        } else {
-            [self.panGesture addTarget:target action:action];
+    if (gesture == self.panGesture) {
+        if (gesture.state == UIGestureRecognizerStateBegan) {
+            CGPoint translation = [gesture translationInView:gesture.view];
+            if (translation.x < 0) {
+                
+                UIViewController *currentVC = [self.dm_viewControllers lastObject];
+                if ([currentVC respondsToSelector:@selector(navigationControllerShouldPushToNextViewController:)]) {
+                    // 设置 UINavigationControllerDelegate。
+                    self.delegate = self.myInteractiveTransition;
+                    
+                    // 调用代理方法。
+                    id<DMB4NavigationControllerProtocol> vc = (id<DMB4NavigationControllerProtocol>) currentVC;
+                    [vc navigationControllerShouldPushToNextViewController:self];
+                }
+                
+            }
+            
+        } else if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled) {
+            
+            // 清理 UINavigationControllerDelegate，如果不清理可能会发生 bar button 无法点击等问题。
+            self.delegate = nil;
+            
+            // 移除 panGesture 在这次 Interactive Push/Pop 中使用的 target。
+            [self.panGesture removeTarget:self.currentPanGestureTarget action:self.currentPanGestureAction];
         }
-        // 禁止使用系统自带的滑动手势。
-        self.interactivePopGestureRecognizer.enabled = NO;
-    } else {
-        id target = self.interactivePopGestureRecognizer.delegate;
-        SEL action = NSSelectorFromString(@"handleNavigationTransition:");
-        [self.panGesture removeTarget:target action:action];
 
-        self.interactivePopGestureRecognizer.enabled = !isRootVC;
     }
     
 }
 
 #pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer == self.panGesture) {
 
-//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-//    if (gestureRecognizer == self.panGesture) {
-//
-//        CGPoint transition = [self.panGesture translationInView:self.view];
-//
-//        if (transition.x < 0) {
-//            // 左滑，进入 Push 操作。
-//            SEL action = NSSelectorFromString(@"onPanGesture:");
-//            [self.panGesture addTarget:self.interactiveTransition action:action];
-//
-//            return YES;
-//        }
-//
-//
-//        return YES;
-//    }
-//
-//    return YES;
-//}
+        // 如果正在做 transition，返回 NO。
+        if ([[self valueForKey:@"_isTransitioning"] boolValue]) {
+            return NO;
+        }
+        
+        // 分别处理左滑和右滑。
+        CGPoint transition = [self.panGesture translationInView:self.view];
+        if (transition.x < 0) { // 左滑，进入 Push 操作。
+            
+            // 如果用户设置 Navigation Controller 全局关闭全屏 Push 手势，返回 NO。
+            if (!self.fullScreenPushGestureEnabled) {
+                return NO;
+            }
+
+            // 如果用户设置当前的 ViewController 关闭全屏 Push 手势，返回 NO。
+            UIViewController *currentVC = [self.dm_viewControllers lastObject];
+            if (!currentVC.dm_fullScreenPushGestureEnabled) {
+                return NO;
+            } else {
+                // 这里将要做 Interactive Push，先要检查一下 navigationControllerDelegate 代理有没有实现对应的方法。
+                if ([currentVC respondsToSelector:@selector(navigationControllerShouldPushToNextViewController:)]) {
+
+                    // 增加 myInteractiveTransition 为 target 来处理 Interactive Push。
+                    SEL action = NSSelectorFromString(@"onPanGesture:");
+                    [self.panGesture addTarget:self.myInteractiveTransition action:action];
+                    // 记录一下，便于后面清理。
+                    self.currentPanGestureTarget = self.myInteractiveTransition;
+                    self.currentPanGestureAction = action;
+                    
+                    return YES;
+                } else {
+                    return NO;
+                }
+            }
+            
+        } else { // 右滑，进入 Pop 操作。
+            
+            // 如果当前压栈的 VC 少于 1 个，则不响应手势。
+            if (self.viewControllers.count <= 1) {
+                return NO;
+            }
+            
+            // 如果用户设置 Navigation Controller 全局关闭全屏 Pop 手势，返回 NO。
+            if (!self.fullScreenPopGestureEnabled) {
+                return NO;
+            }
+            
+            // 如果用户设置当前的 ViewController 关闭全屏 Pop 手势，返回 NO。
+            UIViewController *currentVC = [self.dm_viewControllers lastObject];
+            if (!currentVC.dm_fullScreenPopGestureEnabled) {
+                return NO;
+            } else {
+                
+                // 当前显示的不是第一个 VC 时，用自己增加的全屏滑动手势 panGesture 来 hook 原来的边缘滑动手势的 Pop 处理，从而支持全屏 Pop。
+                // 获取系统自带滑动返回手势的 target 对象。把系统自带滑动返回手势的 target 的 action 方法添加到 panGesture 上。
+                id target = self.interactivePopGestureRecognizer.delegate; // UINavigationInteractiveTransition.
+                SEL action = NSSelectorFromString(@"handleNavigationTransition:");
+                [self.panGesture addTarget:target action:action];
+                // 记录一下，便于后面清理。
+                self.currentPanGestureTarget = target;
+                self.currentPanGestureAction = action;
+                
+                return YES;
+            }
+            
+            
+            
+        }
+
+    }
+
+    return YES;
+}
 
 // 修复有水平方向滚动的 ScrollView 时边缘返回手势失效的问题。
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {

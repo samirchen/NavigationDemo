@@ -47,8 +47,8 @@
 - (void)setupUI {
     self.view.backgroundColor = [UIColor blackColor];
     
-    self.navigationItem.title = @"一维";
-    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:@"二维" style:UIBarButtonItemStylePlain target:self action:@selector(onNextBarButtonClicked:)];
+    self.navigationItem.title = @"A1";
+    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:@"A2" style:UIBarButtonItemStylePlain target:self action:@selector(onNextBarButtonClicked:)];
     self.navigationItem.rightBarButtonItems = @[nextBarButton];
 
     

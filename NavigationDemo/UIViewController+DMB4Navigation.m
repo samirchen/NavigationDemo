@@ -19,6 +19,14 @@
     objc_setAssociatedObject(self, @selector(dm_fullScreenPopGestureEnabled), @(fullScreenPopGestureEnabled), OBJC_ASSOCIATION_RETAIN);
 }
 
+- (BOOL)dm_fullScreenPushGestureEnabled {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
+- (void)setDm_fullScreenPushGestureEnabled:(BOOL)fullScreenPushGestureEnabled {
+    objc_setAssociatedObject(self, @selector(dm_fullScreenPushGestureEnabled), @(fullScreenPushGestureEnabled), OBJC_ASSOCIATION_RETAIN);
+}
+
 - (DMB4NavigationController *)dm_navigationController {
     return objc_getAssociatedObject(self, _cmd);
 }

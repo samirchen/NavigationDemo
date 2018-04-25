@@ -20,8 +20,8 @@
 
 
 
-#pragma mark - DMB4NavigationController Delegate
-@protocol DMB4NavigationControllerDelegate <NSObject>
+#pragma mark - DMB4NavigationController Protocol
+@protocol DMB4NavigationControllerProtocol <NSObject>
 
 @optional
 - (void)navigationControllerShouldPushToNextViewController:(DMB4NavigationController *)navigationController;
@@ -34,10 +34,8 @@
 @interface DMB4NavigationController : UINavigationController
 
 @property (strong, nonatomic) UIImage *backButtonImage;
-@property (assign, nonatomic) BOOL fullScreenPopGestureEnabled;
-@property (copy, nonatomic, readonly) NSArray *dm_viewControllers;
-
-@property (weak, nonatomic) id<DMB4NavigationControllerDelegate> navigationControllerDelegate;
-
+@property (assign, nonatomic) BOOL fullScreenPopGestureEnabled; // DMB4NavigationController 管理的 ViewController 是否开启全屏 Pop 的总全局开关。
+@property (assign, nonatomic) BOOL fullScreenPushGestureEnabled; // DMB4NavigationController 管理的 ViewController 是否开启全屏 Push 的总全局开关。
+@property (copy, nonatomic, readonly) NSArray *dm_viewControllers; // DMB4NavigationController 管理的实际展示的 ViewController。
 
 @end

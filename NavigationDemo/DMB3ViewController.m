@@ -93,7 +93,7 @@ typedef NS_ENUM(int32_t, DMPanMode) {
 - (void)setupUI {
     self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(256)/255.0 green:arc4random_uniform(256)/255.0 blue:arc4random_uniform(256)/255.0 alpha:1.0f];
     
-    self.navigationItem.title = @"交互式转场-PopPush1";
+    self.navigationItem.title = @"B3";
     UIBarButtonItem *closeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(onCloseBarButtonClicked:)];
     self.navigationItem.rightBarButtonItems = @[closeBarButton];
     

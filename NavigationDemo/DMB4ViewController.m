@@ -10,7 +10,7 @@
 #import "UIViewController+DMB4Navigation.h"
 #import "DMB4NavigationController.h"
 
-@interface DMB4ViewController () <DMB4NavigationControllerDelegate>
+@interface DMB4ViewController () <DMB4NavigationControllerProtocol>
 @property (strong, nonatomic) UILabel *contentLabel;
 @property (strong, nonatomic) UIButton *pushButton;
 @end
@@ -39,7 +39,8 @@
     
     NSLog(@"%s, %d, %@", __func__, __LINE__, self);
     
-    //self.dm_navigationController.navigationControllerDelegate = self;
+    self.dm_fullScreenPopGestureEnabled = YES;
+    self.dm_fullScreenPushGestureEnabled = YES;
     
     [self setupUI];
 }
@@ -80,7 +81,7 @@
 - (void)setupUI {
     self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(256)/255.0 green:arc4random_uniform(256)/255.0 blue:arc4random_uniform(256)/255.0 alpha:1.0f];
     
-    self.navigationItem.title = @"交互式转场-PushPop2";
+    self.navigationItem.title = @"B4";
     UIBarButtonItem *closeBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStylePlain target:self action:@selector(onCloseBarButtonClicked:)];
     self.navigationItem.rightBarButtonItems = @[closeBarButton];
     
@@ -121,8 +122,9 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-#pragma mark - DMB4NavigationControllerDelegate
+#pragma mark - DMB4NavigationControllerProtocol
 - (void)navigationControllerShouldPushToNextViewController:(DMB4NavigationController *)navigationController {
+    NSLog(@"%s, %d, %@", __func__, __LINE__, self);
     DMB4ViewController *vc = [[DMB4ViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }

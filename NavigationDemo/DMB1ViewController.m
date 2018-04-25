@@ -43,11 +43,11 @@
 - (void)setupUI {
     self.view.backgroundColor = [UIColor colorWithRed:arc4random_uniform(256)/255.0 green:arc4random_uniform(256)/255.0 blue:arc4random_uniform(256)/255.0 alpha:1.0f];
     
-    self.navigationItem.title = @"自定义转场";
-    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:@"交互1" style:UIBarButtonItemStylePlain target:self action:@selector(onNextBarButtonClicked:)];
-    UIBarButtonItem *next2BarButton = [[UIBarButtonItem alloc] initWithTitle:@"交互2" style:UIBarButtonItemStylePlain target:self action:@selector(onNext2BarButtonClicked:)];
-    UIBarButtonItem *next3BarButton = [[UIBarButtonItem alloc] initWithTitle:@"交互3" style:UIBarButtonItemStylePlain target:self action:@selector(onNext3BarButtonClicked:)];
-    self.navigationItem.rightBarButtonItems = @[nextBarButton, next2BarButton, next3BarButton];
+    self.navigationItem.title = @"B1";
+    UIBarButtonItem *B2BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B2" style:UIBarButtonItemStylePlain target:self action:@selector(onB2BarButtonClicked:)];
+    UIBarButtonItem *B3BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B3" style:UIBarButtonItemStylePlain target:self action:@selector(onB3BarButtonClicked:)];
+    UIBarButtonItem *B4BarButton = [[UIBarButtonItem alloc] initWithTitle:@"B4" style:UIBarButtonItemStylePlain target:self action:@selector(onB4BarButtonClicked:)];
+    self.navigationItem.rightBarButtonItems = @[B2BarButton, B3BarButton, B4BarButton];
     
     // Content label.
     self.contentLabel.text = [NSString stringWithFormat:@"自定义转场[%d]", (int32_t) self.navigationController.viewControllers.count - 1];
@@ -81,23 +81,23 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)onNextBarButtonClicked:(UIBarButtonItem *)barButtonItem {
+- (void)onB2BarButtonClicked:(UIBarButtonItem *)barButtonItem {
     DMB2ViewController *vc = [[DMB2ViewController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc]; // 使用系统的 UINavigationController。
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (void)onNext2BarButtonClicked:(UIBarButtonItem *)barButtonItem {
+- (void)onB3BarButtonClicked:(UIBarButtonItem *)barButtonItem {
     DMB3ViewController *vc = [[DMB3ViewController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc]; // 使用系统的 UINavigationController。
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-- (void)onNext3BarButtonClicked:(UIBarButtonItem *)barButtonItem {
+- (void)onB4BarButtonClicked:(UIBarButtonItem *)barButtonItem {
     DMB4ViewController *vc = [[DMB4ViewController alloc] init];
     DMB4NavigationController *nav = [[DMB4NavigationController alloc] initWithRootViewController:vc];
     nav.fullScreenPopGestureEnabled = YES;
-    
+    nav.fullScreenPushGestureEnabled = YES;
     [self presentViewController:nav animated:YES completion:nil];
 }
 

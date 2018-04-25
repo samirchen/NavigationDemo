@@ -32,12 +32,12 @@
 
     
     UIViewController *c1VC = [[UIViewController alloc] init];
-    c1VC.title = @"C1";
+    c1VC.title = @"C";
     UINavigationController *cNavC = [[UINavigationController alloc] initWithRootViewController:c1VC];
     
 
     UIViewController *d1VC = [[UIViewController alloc] init];
-    d1VC.title = @"D1";
+    d1VC.title = @"D";
     UINavigationController *dNavC = [[UINavigationController alloc] initWithRootViewController:d1VC];
     
     

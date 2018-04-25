@@ -11,7 +11,8 @@
 
 @interface UIViewController (DMB4Navigation)
 
-@property (assign, nonatomic) BOOL dm_fullScreenPopGestureEnabled;
-@property (weak, nonatomic) DMB4NavigationController *dm_navigationController;
+@property (assign, nonatomic) BOOL dm_fullScreenPopGestureEnabled; // 每个 ViewController 自己是否开启全屏 Pop。
+@property (assign, nonatomic) BOOL dm_fullScreenPushGestureEnabled; // 每个 ViewController 自己是否开启全屏 Push。
+@property (weak, nonatomic) DMB4NavigationController *dm_navigationController; // ViewController 最底下有实际控制权的 NavigationController。
 
 @end

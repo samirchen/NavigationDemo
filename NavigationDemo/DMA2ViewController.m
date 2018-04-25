@@ -50,7 +50,7 @@
 - (void)setupUI {
     self.view.backgroundColor = [UIColor blackColor];
     
-    self.navigationItem.title = @"二维";
+    self.navigationItem.title = @"A2";
     
     // Page view controller UI.
     self.pageViewController.view.frame = self.view.bounds;
