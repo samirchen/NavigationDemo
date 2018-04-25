@@ -112,21 +112,25 @@
     
 }
 
+#pragma mark - Navigation
+- (void)goToNextPage {
+    DMB4ViewController *vc = [[DMB4ViewController alloc] init];
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 #pragma mark - Action
 - (void)onCloseBarButtonClicked:(UIBarButtonItem *)barButtonItem {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)onPushButtonClicked:(UIButton *)button {
-    DMB4ViewController *vc = [[DMB4ViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self goToNextPage];
 }
 
 #pragma mark - DMB4NavigationControllerProtocol
 - (void)navigationControllerShouldPushToNextViewController:(DMB4NavigationController *)navigationController {
-    NSLog(@"%s, %d, %@", __func__, __LINE__, self);
-    DMB4ViewController *vc = [[DMB4ViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self goToNextPage];
 }
 
 @end

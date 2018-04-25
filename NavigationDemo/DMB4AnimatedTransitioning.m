@@ -39,12 +39,38 @@
     fromView.frame = fromViewStartFrame;
     toView.frame = toViewStartFrame;
     
-    [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
+    // 在有 tab bar 的时候需要处理 tab bar 的在滑动时的视觉效果。下面的处理方式比较简单。还可以通过截取 fromViewController 图贴在 containerView 再隐藏 tab bar 后再做滑动来改进。
+    if (toViewController.hidesBottomBarWhenPushed) {
+        UITabBar *tabBar = [self fetchTabbar];
+        tabBar.hidden = YES;
+    }
+    
+    
+    [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         fromView.frame = fromViewEndFrame;
         toView.frame = toViewEndFrame;
     } completion:^(BOOL finished) {
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
     }];
 }
+
+- (UITabBar *)fetchTabbar {
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UITabBarController *tabBarController = [self fetchTabBarControllerFromRootViewController:rootViewController];
+    if (tabBarController) {
+        return tabBarController.tabBar;
+    }
+    
+    return nil;
+}
+
+- (UITabBarController *)fetchTabBarControllerFromRootViewController:(UIViewController *)rootViewController{
+    if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+        return (UITabBarController *) rootViewController;
+    } else{
+        return [self fetchTabBarControllerFromRootViewController:rootViewController.childViewControllers.firstObject];
+    }
+}
+
 
 @end

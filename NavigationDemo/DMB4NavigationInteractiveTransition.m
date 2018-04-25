@@ -21,8 +21,8 @@
 - (UIPercentDrivenInteractiveTransition *)myInteractiveTransition{
     if (!_myInteractiveTransition) {
         _myInteractiveTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
-        // 这里要设置为 UIViewAnimationCurveLinear，否则取消时可能出现动画异常。
-        _myInteractiveTransition.completionCurve = UIViewAnimationCurveLinear;
+        // 这里的 completionCurve 要和 DMB4AnimatedTransitioning 里做 animateTransition 时用到的动画效果对应上，否则取消时可能出现动画异常。
+        _myInteractiveTransition.completionCurve = UIViewAnimationCurveEaseInOut;
     }
     
     return _myInteractiveTransition;

@@ -10,6 +10,8 @@
 #import "DMA1ViewController.h"
 #import "DMB1ViewController.h"
 #import "DMB1NavigationController.h"
+#import "DMB4ViewController.h"
+#import "DMB4NavigationController.h"
 
 @interface AppDelegate ()
 
@@ -22,23 +24,24 @@
     
     // 使用 UIPageViewController 来实现全屏上下左右滑动切换页面。
     DMA1ViewController *a1VC = [[DMA1ViewController alloc] init];
-    a1VC.title = @"Page";
     UINavigationController *aNavC = [[UINavigationController alloc] initWithRootViewController:a1VC];
+    aNavC.title = @"A";
     
     // 使用自定义的 Navigation Controller 来实现自定义的 push/pop 转场效果。
     DMB1ViewController *b1VC = [[DMB1ViewController alloc] init];
-    b1VC.title = @"Navigation";
     DMB1NavigationController *bNavC = [[DMB1NavigationController alloc] initWithRootViewController:b1VC];
+    bNavC.title = @"B";
 
-    
-    UIViewController *c1VC = [[UIViewController alloc] init];
-    c1VC.title = @"C";
-    UINavigationController *cNavC = [[UINavigationController alloc] initWithRootViewController:c1VC];
+    DMB4ViewController *c1VC = [[DMB4ViewController alloc] init];
+    DMB4NavigationController *cNavC = [[DMB4NavigationController alloc] initWithRootViewController:c1VC];
+    cNavC.title = @"B4+TabBar";
+    cNavC.fullScreenPopGestureEnabled = YES;
+    cNavC.fullScreenPushGestureEnabled = YES;
     
 
     UIViewController *d1VC = [[UIViewController alloc] init];
-    d1VC.title = @"D";
     UINavigationController *dNavC = [[UINavigationController alloc] initWithRootViewController:d1VC];
+    dNavC.title = @"D";
     
     
     UITabBarController *mainTabBarController = [[UITabBarController alloc] init];
