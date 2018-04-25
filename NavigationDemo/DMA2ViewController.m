@@ -64,7 +64,7 @@
     [self.view addSubview:self.refreshButton];
     self.refreshButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:@[
-                                [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:80.0],
+                                [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:100.0],
                                 [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:-10],
                                 [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:60.0],
                                 [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0]

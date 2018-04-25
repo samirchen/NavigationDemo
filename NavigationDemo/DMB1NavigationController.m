@@ -23,9 +23,9 @@
 
 #pragma mark - UINavigationControllerDelegate
 - (nullable id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
-    DMB1AnimatedTransitioning *ac = [[DMB1AnimatedTransitioning alloc] init];
-    ac.operation = operation;
-    return ac;
+    DMB1AnimatedTransitioning *animatedTransitioning = [[DMB1AnimatedTransitioning alloc] init];
+    animatedTransitioning.operation = operation;
+    return animatedTransitioning;
 }
 
 @end
