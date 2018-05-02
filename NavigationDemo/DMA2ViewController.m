@@ -8,6 +8,7 @@
 
 #import "DMA2ViewController.h"
 #import "DMA2PageContentL1ViewController.h"
+#import "UIViewController+DMB4Navigation.h"
 
 @interface DMA2ViewController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
 @property (copy, nonatomic) NSArray *contentDataD2Array;
@@ -33,6 +34,10 @@
 #pragma mark - Lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // 防止与 UIPageViewController 的左右滑动冲突。
+    self.dm_fullScreenPopGestureEnabled = NO;
+    self.dm_fullScreenPushGestureEnabled = NO;
     
     [self loadData];
     [self setupUI];

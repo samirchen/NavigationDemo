@@ -8,9 +8,11 @@
 
 #import "DMA1ViewController.h"
 #import "DMA2ViewController.h"
+#import "UIViewController+DMB4Navigation.h"
 #import "DMA1PageContentViewController.h"
+#import "DMB4NavigationController.h"
 
-@interface DMA1ViewController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
+@interface DMA1ViewController () <UIPageViewControllerDelegate, UIPageViewControllerDataSource, DMB4NavigationControllerProtocol>
 @property (copy, nonatomic) NSArray *contentDataArray;
 @property (strong, nonatomic) UIPageViewController *pageViewController;
 @property (strong, nonatomic) UIButton *refreshButton;
@@ -33,6 +35,9 @@
 #pragma mark - Lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.dm_fullScreenPopGestureEnabled = YES;
+    self.dm_fullScreenPushGestureEnabled = YES;
     
     [self loadData];
     [self setupUI];
@@ -70,6 +75,13 @@
                                 [NSLayoutConstraint constraintWithItem:self.refreshButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30.0]
                                 ]];
 
+}
+
+#pragma mark - Navigation
+- (void)goToNextPage {
+    DMA1ViewController *vc = [[DMA1ViewController alloc] init];
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - Action
@@ -152,6 +164,10 @@
 //
 //}
 
+#pragma mark - DMB4NavigationControllerProtocol
+- (void)navigationControllerShouldPushToNextViewController:(DMB4NavigationController *)navigationController {
+    [self goToNextPage];
+}
 
 
 @end

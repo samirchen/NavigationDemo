@@ -24,8 +24,11 @@
     
     // 使用 UIPageViewController 来实现全屏上下左右滑动切换页面。
     DMA1ViewController *a1VC = [[DMA1ViewController alloc] init];
-    UINavigationController *aNavC = [[UINavigationController alloc] initWithRootViewController:a1VC];
+    DMB4NavigationController *aNavC = [[DMB4NavigationController alloc] initWithRootViewController:a1VC];
     aNavC.title = @"A";
+    aNavC.fullScreenPopGestureEnabled = YES;
+    aNavC.fullScreenPushGestureEnabled = YES;
+
     
     // 使用自定义的 Navigation Controller 来实现自定义的 push/pop 转场效果。
     DMB4ViewController *b4VC = [[DMB4ViewController alloc] init];
