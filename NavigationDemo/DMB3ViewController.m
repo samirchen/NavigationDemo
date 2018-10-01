@@ -22,7 +22,7 @@ typedef NS_ENUM(int32_t, DMPanMode) {
 
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 
-@property (strong, nonatomic) UIViewController *nextViewController;
+@property (strong, nonatomic) DMB3ViewController *nextViewController;
 @end
 
 @implementation DMB3ViewController
@@ -38,6 +38,14 @@ typedef NS_ENUM(int32_t, DMPanMode) {
     }
     
     return _contentLabel;
+}
+
+- (DMB3ViewController *)nextViewController {
+    if (!_nextViewController) {
+        _nextViewController = [[DMB3ViewController alloc] init];
+    }
+    
+    return _nextViewController;
 }
 
 #pragma mark - Lifecycle
@@ -141,6 +149,92 @@ typedef NS_ENUM(int32_t, DMPanMode) {
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+// 另一种用矩阵变换做动画。
+- (void)onPanGesture2:(UIPanGestureRecognizer *)gesture {
+    // 查找容器。
+    UIViewController *rootViewController = self.tabBarController;
+    
+    
+    static DMPanMode panMode = DMPanModeNone;
+    
+    CGPoint offset = [gesture translationInView:self.view];
+    
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        // 当需要判断上下左右 4 个方向时：
+//        if (fabs(offset.x) < fabs(offset.y)) {
+//            if (offset.y > 0) {
+//                panMode = DMPanModeDown;
+//            } else {
+//                panMode = DMPanModeUp;
+//            }
+//        } else {
+//            if (offset.x > 0) {
+//                panMode = DMPanModeRight;
+//            } else {
+//                panMode = DMPanModeLeft;
+//            }
+//        }
+        
+        // 当只需要判断左右 2 个方向时：
+        if (offset.x > 0) {
+            panMode = DMPanModeRight;
+        } else {
+            panMode = DMPanModeLeft;
+        }
+        
+        NSLog(@"PanMode: %d", panMode);
+        
+        if (panMode == DMPanModeLeft) {
+
+            // 把下一个 vc 添加到 window 上，并放在屏幕右侧。
+            CGSize screenSize = [UIScreen mainScreen].bounds.size;
+            self.nextViewController.view.frame = CGRectMake(screenSize.width, 0.f, screenSize.width, screenSize.height);
+            [[UIApplication sharedApplication].windows.firstObject addSubview:self.nextViewController.view];
+        }
+        
+    } else if (gesture.state == UIGestureRecognizerStateChanged) {
+        
+        //NSLog(@"Pan Transition: (%.2f, %.2f)", offset.x, offset.y);
+        
+        if (panMode == DMPanModeLeft) {
+            rootViewController.view.transform = CGAffineTransformMakeTranslation(offset.x, 0);
+            CGFloat offsetX = offset.x * 1.4;
+            offsetX = MAX(offsetX, -([UIScreen mainScreen].bounds.size.width));
+            self.nextViewController.view.transform = CGAffineTransformMakeTranslation(offsetX, 0);
+        }
+        
+    } else if (gesture.state == UIGestureRecognizerStateCancelled || gesture.state == UIGestureRecognizerStateEnded) {
+        NSLog(@"PanEnd");
+        
+        if (panMode == DMPanModeLeft) {
+            CGSize screenSize = [UIScreen mainScreen].bounds.size;
+            if (offset.x < -screenSize.width * 0.3f) {
+                [UIView animateWithDuration:0.3f animations:^{
+                    rootViewController.view.transform = CGAffineTransformMakeTranslation(-([UIScreen mainScreen].bounds.size.width), 0);
+                    self.nextViewController.view.transform = CGAffineTransformMakeTranslation(-([UIScreen mainScreen].bounds.size.width), 0);
+                } completion:^(BOOL finished) {
+                    [self.navigationController pushViewController:self.nextViewController animated:NO];
+                    self.nextViewController = nil;
+                    rootViewController.view.transform = CGAffineTransformIdentity;
+                    self.nextViewController.view.transform = CGAffineTransformIdentity;
+                }];
+            } else {
+                [UIView animateWithDuration:0.3f animations:^{
+                    rootViewController.view.transform = CGAffineTransformIdentity;
+                    self.nextViewController.view.transform = CGAffineTransformIdentity;
+                } completion:^(BOOL finished) {
+                    rootViewController.view.transform = CGAffineTransformIdentity;
+                    self.nextViewController.view.transform = CGAffineTransformIdentity;
+                    [self.nextViewController.view removeFromSuperview];
+                }];
+            }
+        }
+        
+        panMode = DMPanModeNone;
+    }
+}
+
+
 - (void)onPanGesture:(UIPanGestureRecognizer *)gesture {
     static DMPanMode panMode = DMPanModeNone;
     
@@ -176,11 +270,8 @@ typedef NS_ENUM(int32_t, DMPanMode) {
             NSLog(@"New VC.");
             // 左滑时，创建 nextViewController 并准备跟着手势移动。
             // 这里的问题在于：一旦调用了 addSubview 处理了 nextViewController 的 view 则会在此触发对应的 viewWillAppear 和 viewDidAppear 方法。而这时候 nextViewController 还未添加到对应的 Navigation Controller 中。
-            if (!_nextViewController) {
-                self.nextViewController = [[DMB3ViewController alloc] init];
-                self.nextViewController.view.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-                [self.view addSubview:self.nextViewController.view];
-            }
+            self.nextViewController.view.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+            [self.view addSubview:self.nextViewController.view];
         }
         
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
@@ -188,40 +279,33 @@ typedef NS_ENUM(int32_t, DMPanMode) {
         //NSLog(@"Pan Transition: (%.2f, %.2f)", offset.x, offset.y);
         
         if (panMode == DMPanModeLeft) {
-            if (_nextViewController) {
-                CGFloat transitionX = self.view.frame.origin.x + self.view.frame.size.width + offset.x;
-                CGRect transitionFrame = CGRectMake(transitionX, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-                self.nextViewController.view.frame = transitionFrame;
-            }
+            CGFloat transitionX = self.view.frame.origin.x + self.view.frame.size.width + offset.x;
+            CGRect transitionFrame = CGRectMake(transitionX, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+            self.nextViewController.view.frame = transitionFrame;
         }
         
     } else if (gesture.state == UIGestureRecognizerStateCancelled || gesture.state == UIGestureRecognizerStateEnded) {
         NSLog(@"PanEnd");
         
         if (panMode == DMPanModeLeft) {
-            if (_nextViewController) {
-                
-                // 如果页面拖动超过 1/3 屏，则滑动过来，否则滑回去。
-                // 这里的问题在于：会多次触发 nextViewController 的 viewWillAppear、viewDidAppear、viewWillDisappear、viewDidDisappear。
-                if (offset.x < 0 && fabs(offset.x) > self.view.frame.size.width/3) {
-                    [UIView animateWithDuration:0.3 animations:^{
-                        self.nextViewController.view.frame = self.view.frame;
-                    } completion:^(BOOL finished) {
-                        
-                        [self.nextViewController.view removeFromSuperview];
-                        [self.navigationController pushViewController:self.nextViewController animated:NO];
-                        self.nextViewController = nil;
-                    }];
-                } else {
-                    [UIView animateWithDuration:0.3 animations:^{
-                        self.nextViewController.view.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-                    } completion:^(BOOL finished) {
-                        [self.nextViewController.view removeFromSuperview];
-                        self.nextViewController = nil;
-                    }];
-                }
-                
-                
+            // 如果页面拖动超过 1/3 屏，则滑动过来，否则滑回去。
+            // 这里的问题在于：会多次触发 nextViewController 的 viewWillAppear、viewDidAppear、viewWillDisappear、viewDidDisappear。
+            if (offset.x < 0 && fabs(offset.x) > self.view.frame.size.width/3) {
+                [UIView animateWithDuration:0.3 animations:^{
+                    self.nextViewController.view.frame = self.view.frame;
+                } completion:^(BOOL finished) {
+                    
+                    [self.nextViewController.view removeFromSuperview];
+                    [self.navigationController pushViewController:self.nextViewController animated:NO];
+                    self.nextViewController = nil;
+                }];
+            } else {
+                [UIView animateWithDuration:0.3 animations:^{
+                    self.nextViewController.view.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+                } completion:^(BOOL finished) {
+                    [self.nextViewController.view removeFromSuperview];
+                    self.nextViewController = nil;
+                }];
             }
         }
         
