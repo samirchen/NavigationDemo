@@ -48,7 +48,7 @@
 
 #pragma mark - Action
 - (void)onPanGesture:(UIPanGestureRecognizer *)panGesture {
-    CGFloat progress = [panGesture translationInView:panGesture.view].x / (panGesture.view.bounds.size.width * 1.0);
+    CGFloat progress = [panGesture translationInView:panGesture.view].x / panGesture.view.bounds.size.width;
     
     if (panGesture.state == UIGestureRecognizerStateBegan) {
         

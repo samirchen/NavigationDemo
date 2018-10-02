@@ -152,7 +152,7 @@ typedef NS_ENUM(int32_t, DMPanMode) {
 // 另一种用矩阵变换做动画。
 - (void)onPanGesture2:(UIPanGestureRecognizer *)gesture {
     // 查找容器。
-    UIViewController *rootViewController = self.tabBarController;
+    UIViewController *rootViewController = self.tabBarController ? : self.navigationController;
     
     
     static DMPanMode panMode = DMPanModeNone;
